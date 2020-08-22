@@ -25,6 +25,7 @@ namespace T_Rex
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
             pManager.AddPointParameter("Mesh Points", "Mesh Points", "Desc", GH_ParamAccess.list);
+            pManager.AddMeshParameter("Mesh", "Mesh", "Desc", GH_ParamAccess.item);
         }
         protected override void SolveInstance(IGH_DataAccess DA)
         {
@@ -37,6 +38,7 @@ namespace T_Rex
             FreeShape newShape = new FreeShape(vertices, props);
 
             DA.SetDataList(0, newShape.MeshPoints);
+            DA.SetData(1, newShape.RebarMesh);
         }
         protected override System.Drawing.Bitmap Icon
         {

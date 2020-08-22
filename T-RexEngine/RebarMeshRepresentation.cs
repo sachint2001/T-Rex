@@ -26,6 +26,41 @@ namespace T_RexEngine
             return sectionPoints;
         }
 
+        public static List<int[]> StartEndMeshFaceIntegers(List<Point3d> rebarMeshPoints)
+        {
+            List<int[]> faceIntegers = new List<int[]>();
+
+            for (int i = 0; i < 11; i++)
+            {
+                faceIntegers.Add(new []{0, i+1, i+2});
+            }
+            faceIntegers.Add(new[] { 0, 12, 1 });
+
+            return faceIntegers;
+        }
+
+        public static Mesh CreateRebarMesh(List<Point3d> rebarMeshPoints)
+        {
+            Mesh rebarMesh = new Mesh();
+
+            foreach (var point in rebarMeshPoints)
+            {
+                rebarMesh.Vertices.Add(point);
+            }
+
+            List<int[]> startEndMeshFacesIntegers = StartEndMeshFaceIntegers(rebarMeshPoints);
+
+            foreach (var intTable in startEndMeshFacesIntegers)
+            {
+                rebarMesh.Faces.AddFace(intTable[0], intTable[1], intTable[2]);
+            }
+
+            rebarMesh.Normals.ComputeNormals();
+            rebarMesh.Compact();
+
+            return rebarMesh;
+        }
+
         public static List<Point3d> CreateRebarMeshPoints(List<Point3d> sectionPoints,
             List<Point3d> curveDivisionPoints)
         {

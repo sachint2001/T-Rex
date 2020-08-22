@@ -23,11 +23,14 @@ namespace T_RexEngine
             List<Point3d> divisionPointsOfRebarCurve = RebarCurveTools.DivideSegmentsToPoints(segments);
             List<Point3d> sectionPoints = RebarMeshRepresentation.CreateSectionPoints(Props.Diameter);
             List<Point3d> rebarMeshPoints = RebarMeshRepresentation.CreateRebarMeshPoints(sectionPoints, divisionPointsOfRebarCurve);
+            Mesh rebarMesh = RebarMeshRepresentation.CreateRebarMesh(rebarMeshPoints);
 
             MeshPoints = rebarMeshPoints;
+            RebarMesh = rebarMesh;
         }
 
         public List<Point3d> MeshPoints { get; set; }
+        public Mesh RebarMesh { get; set; }
         public Curve RebarCurve { get; set; }
         public List<Point3d> Vertices { get; set; }
         public RebarProperties Props { get; set; }
