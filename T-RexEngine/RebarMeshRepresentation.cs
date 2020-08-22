@@ -26,7 +26,7 @@ namespace T_RexEngine
             return sectionPoints;
         }
 
-        public static List<int[]> StartEndMeshFaceIntegers(List<Point3d> rebarMeshPoints)
+        public static List<int[]> StartEndMeshFaceIndexes(List<Point3d> rebarMeshPoints)
         {
             List<int[]> faceIntegers = new List<int[]>();
 
@@ -35,6 +35,28 @@ namespace T_RexEngine
                 faceIntegers.Add(new []{0, i+1, i+2});
             }
             faceIntegers.Add(new[] { 0, 12, 1 });
+
+            for (int i = rebarMeshPoints.Count - 1; i > rebarMeshPoints.Count - 12; i--)
+            {
+                faceIntegers.Add(new[] { rebarMeshPoints.Count - 1, i - 1, i - 2 });
+            }
+            faceIntegers.Add(new[] { rebarMeshPoints.Count - 1, rebarMeshPoints.Count - 13, rebarMeshPoints.Count - 2 });
+
+            return faceIntegers;
+        }
+
+        public static List<int[]> MiddleMeshFaceIndexes(List<Point3d> rebarMeshPoints)
+        {
+            List<int[]> faceIntegers = new List<int[]>();
+
+            for (int i = 1; i < rebarMeshPoints.Count - 2; i += 12)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    faceIntegers.Add(new[] { j + i, j + 1 + i, j + 12 + i, j + 11 + i });
+                }
+                faceIntegers.Add(new[] { i, i + 11, i + 12 + 11, i + 12 + 10 });
+            }
 
             return faceIntegers;
         }
@@ -48,11 +70,16 @@ namespace T_RexEngine
                 rebarMesh.Vertices.Add(point);
             }
 
-            List<int[]> startEndMeshFacesIntegers = StartEndMeshFaceIntegers(rebarMeshPoints);
-
+            List<int[]> startEndMeshFacesIntegers = StartEndMeshFaceIndexes(rebarMeshPoints);
             foreach (var intTable in startEndMeshFacesIntegers)
             {
                 rebarMesh.Faces.AddFace(intTable[0], intTable[1], intTable[2]);
+            }
+
+            List<int[]> middleMeshFaceIntegers = MiddleMeshFaceIndexes(rebarMeshPoints);
+            foreach (var intTable in middleMeshFaceIntegers)
+            {
+                rebarMesh.Faces.AddFace(intTable[0], intTable[1], intTable[2], intTable[3]);
             }
 
             rebarMesh.Normals.ComputeNormals();
