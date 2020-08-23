@@ -49,13 +49,13 @@ namespace T_RexEngine
         {
             List<int[]> faceIntegers = new List<int[]>();
 
-            for (int i = 1; i < rebarMeshPoints.Count - 2; i += 12)
+            for (int i = 1; i < rebarMeshPoints.Count - 2 - 12; i += 12)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 11; j++)
                 {
-                    faceIntegers.Add(new[] { j + i, j + 1 + i, j + 12 + i, j + 11 + i });
+                    faceIntegers.Add(new[] { j + i, j + 1 + i, j + 12 + 1 + i, j + 12 + i });
                 }
-                faceIntegers.Add(new[] { i, i + 11, i + 12 + 11, i + 12 + 10 });
+                faceIntegers.Add(new[] { i, i + 12, i + 12 + 11, i + 11 });
             }
 
             return faceIntegers;
