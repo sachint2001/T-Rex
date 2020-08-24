@@ -13,6 +13,8 @@ namespace T_RexEngine
             Vertices = vertices;
             Props = props;
 
+            List<Point3d> sectionPoints = RebarMeshRepresentation.CreateSectionPoints(Props.Diameter);
+
             RebarCurve = new PolylineCurve(Vertices);
             if (Vertices.Count > 2)
             {
@@ -20,15 +22,18 @@ namespace T_RexEngine
                     _activeDoc.ModelAbsoluteTolerance, _activeDoc.ModelAngleToleranceRadians);
             }
             List<Curve> segments = RebarCurveTools.ExplodeIntoSegments(RebarCurve);
-            List<Point3d> divisionPointsOfRebarCurve = RebarCurveTools.DivideSegmentsToPoints(segments);
-            List<Point3d> sectionPoints = RebarMeshRepresentation.CreateSectionPoints(Props.Diameter);
-            List<Point3d> rebarMeshPoints = RebarMeshRepresentation.CreateRebarMeshPoints(sectionPoints, divisionPointsOfRebarCurve);
-            Mesh rebarMesh = RebarMeshRepresentation.CreateRebarMesh(rebarMeshPoints);
+            List<double> parameters = RebarCurveTools.GetParameters(segments, RebarCurve);
+            List<Plane> divisionPlanes = RebarCurveTools.GetDivisionPlanesForRebarCurve(RebarCurve, parameters);
+            List<Point3d> rebarMeshPoints =
+                RebarMeshRepresentation.CreateRebarMeshPoints(sectionPoints, divisionPlanes, RebarCurve);
 
             MeshPoints = rebarMeshPoints;
-            RebarMesh = rebarMesh;
+            DivisionPlanes = divisionPlanes;
+            Parameters = parameters;
+            //RebarMesh = rebarMesh;
         }
-
+        public List<double> Parameters { get; set; }
+        public List<Plane> DivisionPlanes { get; set; }
         public List<Point3d> MeshPoints { get; set; }
         public Mesh RebarMesh { get; set; }
         public Curve RebarCurve { get; set; }

@@ -89,30 +89,18 @@ namespace T_RexEngine
         }
 
         public static List<Point3d> CreateRebarMeshPoints(List<Point3d> sectionPoints,
-            List<Point3d> curveDivisionPoints)
+            List<Plane> curveDivisionPlanes, Curve rebarCurve)
         {
             List<Point3d> rebarMeshPoints = new List<Point3d>();
-            Vector3d workVector = new Vector3d();
-            Plane workPlane;
 
-            rebarMeshPoints.Add(curveDivisionPoints[0]);
+            rebarMeshPoints.Add(rebarCurve.PointAtStart);
 
-            for (int i = 0; i < curveDivisionPoints.Count - 1; i++)
+            foreach (var plane in curveDivisionPlanes)
             {
-                workVector = new Vector3d
-                (
-                    curveDivisionPoints[i + 1].X - curveDivisionPoints[i].X,
-                    curveDivisionPoints[i + 1].Y - curveDivisionPoints[i].Y,
-                    curveDivisionPoints[i + 1].Z - curveDivisionPoints[i].Z
-                );
-                workPlane = new Plane(curveDivisionPoints[i], workVector);
-                rebarMeshPoints.AddRange(MoveXyPointsToAnotherPlane(sectionPoints, workPlane));
+                rebarMeshPoints.AddRange(MoveXyPointsToAnotherPlane(sectionPoints, plane));
             }
 
-            workPlane = new Plane(curveDivisionPoints[curveDivisionPoints.Count - 1], workVector);
-            rebarMeshPoints.AddRange(MoveXyPointsToAnotherPlane(sectionPoints, workPlane));
-
-            rebarMeshPoints.Add(curveDivisionPoints[curveDivisionPoints.Count - 1]);
+            rebarMeshPoints.Add(rebarCurve.PointAtEnd);
 
             return rebarMeshPoints;
         }

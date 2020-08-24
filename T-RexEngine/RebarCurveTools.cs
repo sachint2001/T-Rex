@@ -7,7 +7,7 @@ using Rhino.Geometry;
 
 namespace T_RexEngine
 {
-    public class RebarCurveTools
+    public class  RebarCurveTools
     {
         public static List<Curve> ExplodeIntoSegments(Curve curveToDivideIntoSegments)
         {
@@ -26,26 +26,47 @@ namespace T_RexEngine
             return segmentsAsList;
         }
 
-        public static List<Point3d> DivideSegmentsToPoints(List<Curve> segmentsToDivide)
+        public static List<Plane> GetDivisionPlanesForRebarCurve(Curve wholeCurve, List<double> parameters)
         {
-            List<Point3d> pointsOfDivisions = new List<Point3d>();
+            List<Plane> planesOfDivision = new List<Plane>();
 
-            foreach (var segment in segmentsToDivide)
+            foreach (var param in parameters)
+            {
+                wholeCurve.PerpendicularFrameAt(param, out var currentPlane);
+                planesOfDivision.Add(currentPlane);
+            }
+
+            return planesOfDivision;
+        }
+
+        public static List<double> GetParameters(List<Curve> segments, Curve wholeCurve)
+        {
+            List<double> parameters = new List<double>();
+
+            double domainBehindCurrent = 0;
+
+            foreach (var segment in segments)
             {
                 if (segment.IsArc())
                 {
-                    segment.DivideByCount(10, false, out var points);
-                    pointsOfDivisions.AddRange(points);
+                    double arcDomain = segment.Domain[1];
+                    for (int i = 0; i < 10; i++)
+                    {
+                        parameters.Add(domainBehindCurrent + i * arcDomain / 10);
+                    }
+
+                    domainBehindCurrent += segment.Domain[1];
                 }
                 else
                 {
-                    pointsOfDivisions.Add(segment.PointAtStart);
+                    parameters.Add(domainBehindCurrent);
+                    domainBehindCurrent += segment.Domain[1];
                 }
             }
 
-            pointsOfDivisions.Add(segmentsToDivide[segmentsToDivide.Count-1].PointAtEnd);
+            parameters.Add(wholeCurve.Domain[1]);
 
-            return pointsOfDivisions;
+            return parameters;
         }
     }
 }
