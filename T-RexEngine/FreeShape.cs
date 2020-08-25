@@ -24,13 +24,13 @@ namespace T_RexEngine
             List<Curve> segments = RebarCurveTools.ExplodeIntoSegments(RebarCurve);
             List<double> parameters = RebarCurveTools.GetParameters(segments, RebarCurve);
             List<Plane> divisionPlanes = RebarCurveTools.GetDivisionPlanesForRebarCurve(RebarCurve, parameters);
-            List<Point3d> rebarMeshPoints =
-                RebarMeshRepresentation.CreateRebarMeshPoints(sectionPoints, divisionPlanes, RebarCurve);
+            List<Point3d> rebarMeshPoints = RebarMeshRepresentation.CreateRebarMeshPoints(sectionPoints, divisionPlanes, RebarCurve);
+            Mesh rebarMesh = RebarMeshRepresentation.CreateRebarMesh(rebarMeshPoints);
 
             MeshPoints = rebarMeshPoints;
             DivisionPlanes = divisionPlanes;
             Parameters = parameters;
-            //RebarMesh = rebarMesh;
+            RebarMesh = rebarMesh;
         }
         public List<double> Parameters { get; set; }
         public List<Plane> DivisionPlanes { get; set; }

@@ -94,12 +94,10 @@ namespace T_RexEngine
             List<Point3d> rebarMeshPoints = new List<Point3d>();
 
             rebarMeshPoints.Add(rebarCurve.PointAtStart);
-
             foreach (var plane in curveDivisionPlanes)
             {
                 rebarMeshPoints.AddRange(MoveXyPointsToAnotherPlane(sectionPoints, plane));
             }
-
             rebarMeshPoints.Add(rebarCurve.PointAtEnd);
 
             return rebarMeshPoints;

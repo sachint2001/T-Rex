@@ -42,17 +42,20 @@ namespace T_RexEngine
         public static List<double> GetParameters(List<Curve> segments, Curve wholeCurve)
         {
             List<double> parameters = new List<double>();
+            double domainBehindCurrent = 0.0;
 
-            double domainBehindCurrent = 0;
+            var t = wholeCurve.DivideByCount(100, true);
 
-            foreach (var segment in segments)
+            parameters.AddRange(t);
+
+            /*foreach (var segment in segments)
             {
                 if (segment.IsArc())
                 {
                     double arcDomain = segment.Domain[1];
                     for (int i = 0; i < 10; i++)
                     {
-                        parameters.Add(domainBehindCurrent + i * arcDomain / 10);
+                        parameters.Add(domainBehindCurrent + i * arcDomain / 10.0);
                     }
 
                     domainBehindCurrent += segment.Domain[1];
@@ -62,9 +65,9 @@ namespace T_RexEngine
                     parameters.Add(domainBehindCurrent);
                     domainBehindCurrent += segment.Domain[1];
                 }
-            }
+            }*/
 
-            parameters.Add(wholeCurve.Domain[1]);
+            //parameters.Add(wholeCurve.Domain[1]);
 
             return parameters;
         }

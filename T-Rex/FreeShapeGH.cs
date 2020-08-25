@@ -28,7 +28,7 @@ namespace T_Rex
             pManager.AddPlaneParameter("Planes", "Planes", "Desc", GH_ParamAccess.list);
             pManager.AddCurveParameter("Rebar Curve", "Rebar Curve", "Desc", GH_ParamAccess.item);
             pManager.AddNumberParameter("Parameters", "Parameters", "Desc", GH_ParamAccess.list);
-            //pManager.AddMeshParameter("Mesh", "Mesh", "Desc", GH_ParamAccess.item);
+            pManager.AddMeshParameter("Mesh", "Mesh", "Desc", GH_ParamAccess.item);
         }
         protected override void SolveInstance(IGH_DataAccess DA)
         {
@@ -44,7 +44,7 @@ namespace T_Rex
             DA.SetDataList(1, newShape.DivisionPlanes);
             DA.SetData(2, newShape.RebarCurve);
             DA.SetDataList(3, newShape.Parameters);
-            //DA.SetData(1, newShape.RebarMesh);
+            DA.SetData(4, newShape.RebarMesh);
         }
         protected override System.Drawing.Bitmap Icon
         {
