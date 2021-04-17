@@ -13,11 +13,105 @@ namespace T_RexEngine
         
         public Profile(string name, List<Point3d> points, double tolerance)
         {
+            Name = name;
             Tolerance = tolerance;
             ProfilePoints = points;
 
-            List<Point3d> pointsForPolyline = points;
-            pointsForPolyline.Add(points[0]);
+            Polyline polyline = ProfilePointsToPolyline(ProfilePoints);
+            List<Curve> curves = PolylineToListOfCurves(polyline);
+
+            BoundarySurfaces = Brep.CreatePlanarBreps(curves, tolerance);
+            ProfileCurve = polyline.ToNurbsCurve();
+        }
+
+        public Profile(string name, double height, double width, double tolerance)
+        {
+            Name = name;
+            Tolerance = tolerance;
+
+            Point3d topRightPoint = new Point3d(width/2.0, height/2.0, 0);
+            Point3d bottomRightPoint = new Point3d(width/2.0, -height/2.0, 0);
+            Point3d bottomLeftPoint = new Point3d(-width/2.0, -height/2.0, 0);
+            Point3d topLeftPoint = new Point3d(-width/2.0, height/2.0, 0);
+            
+            ProfilePoints = new List<Point3d>{topRightPoint, bottomRightPoint, bottomLeftPoint, topLeftPoint};
+            
+            Polyline polyline = ProfilePointsToPolyline(ProfilePoints);
+            List<Curve> curves = PolylineToListOfCurves(polyline);
+
+            BoundarySurfaces = Brep.CreatePlanarBreps(curves, tolerance);
+            ProfileCurve = polyline.ToNurbsCurve();
+        }
+
+        public Profile(string name, int type, double height, double flangeHeight, double webWidth, double flangeWidth, double tolerance)
+        {
+            Name = name;
+            Tolerance = tolerance;
+
+            switch (type)
+            {
+                case 0:
+                    ProfilePoints = CreatePointsForTShape(height, flangeHeight, webWidth, flangeWidth);
+                    break;
+                case 1:
+                    ProfilePoints = CreatePointsForLShape(height, flangeHeight, webWidth, flangeWidth);
+                    break;
+                default:
+                    throw new ArgumentException("Profile type not recognized");
+            }
+            
+            Polyline polyline = ProfilePointsToPolyline(ProfilePoints);
+            List<Curve> curves = PolylineToListOfCurves(polyline);
+
+            BoundarySurfaces = Brep.CreatePlanarBreps(curves, tolerance);
+            ProfileCurve = polyline.ToNurbsCurve();
+        }
+
+        public override string ToString()
+        {
+            return $"Profile{Environment.NewLine}" + $"Name: {Name}";
+        }
+
+        private static List<Point3d> CreatePointsForTShape(double height, double flangeHeight, double webWidth, double flangeWidth)
+        {
+            Point3d topRightPoint = new Point3d(flangeWidth/2.0, height/2.0, 0);
+            Point3d flangeBottomRightPoint = new Point3d(flangeWidth/2.0, height/2.0 - flangeHeight,0);
+            Point3d webTopRightPoint = new Point3d(webWidth/2.0, height/2.0 - flangeHeight, 0);
+            Point3d webBottomRightPoint = new Point3d(webWidth/2.0, - height/2.0, 0);
+            
+            Point3d webBottomLeftPoint = new Point3d(- webWidth/2.0, - height/2.0, 0);
+            Point3d webTopLeftPoint = new Point3d(- webWidth/2.0, height/2.0 - flangeHeight, 0);
+            Point3d flangeBottomLeftPoint = new Point3d(- flangeWidth/2.0, height/2.0 - flangeHeight,0);
+            Point3d topLeftPoint = new Point3d(- flangeWidth/2.0, height/2.0, 0);
+            
+            List<Point3d> points = new List<Point3d>{topRightPoint, flangeBottomRightPoint,
+                                                     webTopRightPoint, webBottomRightPoint,
+                                                     webBottomLeftPoint, webTopLeftPoint,
+                                                     flangeBottomLeftPoint, topLeftPoint};
+
+            return points;
+        }
+
+        private static List<Point3d> CreatePointsForLShape(double height, double flangeHeight, double webWidth,
+            double flangeWidth)
+        {
+            Point3d topRightPoint = new Point3d(-flangeWidth/2.0 + webWidth, height/2.0, 0);
+            Point3d flangeTopPoint = new Point3d(-flangeWidth/2.0 + webWidth, -height/2.0 + flangeHeight, 0);
+            Point3d flangeTopRightPoint = new Point3d(flangeWidth/2.0, -height/2.0 + flangeHeight, 0);
+            Point3d flangeBottomRightPoint = new Point3d(flangeWidth/2.0, -height/2.0, 0);
+            Point3d flangeBottomLeftPoint = new Point3d(-flangeWidth/2.0, -height/2.0, 0);
+            Point3d topLeftPoint = new Point3d(-flangeWidth/2.0, height/2.0, 0);
+            
+            List<Point3d> points = new List<Point3d>{topRightPoint, flangeTopPoint,
+                flangeTopRightPoint, flangeBottomRightPoint, flangeBottomLeftPoint, topLeftPoint};
+
+            return points;
+        }
+
+        private Polyline ProfilePointsToPolyline(List<Point3d> profilePoints)
+        {
+            List<Point3d> pointsForPolyline = profilePoints;
+            pointsForPolyline.Add(profilePoints[0]);
             
             Polyline polyline = new Polyline(pointsForPolyline);
             
@@ -26,17 +120,14 @@ namespace T_RexEngine
                 throw new ArgumentException("Polyline should be closed");
             }
 
-            Line[] lines = polyline.GetSegments();
-            List<Curve> curves = lines.Select(line => line.ToNurbsCurve()).Cast<Curve>().ToList();
-
-            BoundarySurfaces = Brep.CreatePlanarBreps(curves, tolerance);
-            ProfileCurve = polyline.ToNurbsCurve();
-            Name = name;
+            return polyline;
         }
 
-        public override string ToString()
+        private List<Curve> PolylineToListOfCurves(Polyline polyline)
         {
-            return $"Profile{Environment.NewLine}" + $"Name: {Name}";
+            Line[] lines = polyline.GetSegments();
+            List<Curve> curves = lines.Select(line => line.ToNurbsCurve()).Cast<Curve>().ToList();
+            return curves;
         }
 
         public double Tolerance
@@ -82,6 +173,11 @@ namespace T_RexEngine
             get { return _breps; }
             private set
             {
+                if (value == null)
+                {
+                    throw new ArgumentException("Brep result is null, check input points.");
+                }
+                
                 if (value.Length != 1)
                 {
                     throw new ArgumentException("There is more than 1 brep as a result of profile creation. Check if points are correct and if the order of points is correct.");
