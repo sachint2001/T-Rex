@@ -6,7 +6,6 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Parameters;
 using Rhino;
 using Rhino.Geometry;
-using T_RexEngine.Enums;
 
 namespace T_Rex
 {
@@ -72,6 +71,10 @@ namespace T_Rex
             {
                 return Properties.Resources.ProfileElements;
             }
+        }
+        public override GH_Exposure Exposure
+        {
+            get { return GH_Exposure.secondary; }
         }
         public override Guid ComponentGuid
         {

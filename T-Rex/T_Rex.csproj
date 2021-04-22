@@ -64,14 +64,16 @@
     <Compile Include="CurveSpacingGH.cs" />
     <Compile Include="CurveToRebarShapeGH.cs" />
     <Compile Include="ElementGroupInfoGH.cs" />
+    <Compile Include="LProfileGH.cs" />
     <Compile Include="MeshToElementsGH.cs" />
-    <Compile Include="ProfileGH.cs" />
+    <Compile Include="PolylineProfileGH.cs" />
     <Compile Include="ProfileToElementsGH.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RectangleProfileGH.cs" />
     <Compile Include="RectangleToLineBarShapeGH.cs" />
     <Compile Include="LBarShapeGH.cs" />
     <Compile Include="MaterialGH.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="RebarPropertiesGH.cs" />
     <Compile Include="SpacerShapeGH.cs" />
     <Compile Include="StirrupBarShapeGH.cs" />
+    <Compile Include="TProfileGH.cs" />
     <Compile Include="VectorCountSpacingGH.cs" />
     <Compile Include="RectangleToStirrupBarShapeGH.cs" />
     <Compile Include="T_RexInfo.cs" />
@@ -160,9 +163,12 @@
   <ItemGroup>
     <Content Include="Resources\ElementInfo.png" />
     <Content Include="Resources\IFC.png" />
+    <Content Include="Resources\LProfile.png" />
     <Content Include="Resources\Mesh.png" />
+    <Content Include="Resources\PolylineProfile.png" />
     <Content Include="Resources\Profile.png" />
     <Content Include="Resources\ProfileElements.png" />
+    <Content Include="Resources\RectangleProfile.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

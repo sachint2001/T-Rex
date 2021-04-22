@@ -143,6 +143,16 @@ namespace T_Rex.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap LProfile {
+            get {
+                object obj = ResourceManager.GetObject("LProfile", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Material {
             get {
                 object obj = ResourceManager.GetObject("Material", resourceCulture);
@@ -156,6 +166,16 @@ namespace T_Rex.Properties {
         internal static System.Drawing.Bitmap Mesh {
             get {
                 object obj = ResourceManager.GetObject("Mesh", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PolylineProfile {
+            get {
+                object obj = ResourceManager.GetObject("PolylineProfile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -206,6 +226,16 @@ namespace T_Rex.Properties {
         internal static System.Drawing.Bitmap RebarProp {
             get {
                 object obj = ResourceManager.GetObject("RebarProp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RectangleProfile {
+            get {
+                object obj = ResourceManager.GetObject("RectangleProfile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

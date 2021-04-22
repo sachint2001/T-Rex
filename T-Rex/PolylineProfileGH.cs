@@ -7,11 +7,11 @@ using T_RexEngine;
 
 namespace T_Rex
 {
-    public class ProfileGH : GH_Component
+    public class PolylineProfileGH : GH_Component
     {
-        public ProfileGH()
-            : base("Profile", "Profile",
-                "Creates profile for the element",
+        public PolylineProfileGH()
+            : base("Polyline Profile", "Polyline Profile",
+                "Creates polyline profile for the element",
                 "T-Rex", "Concrete")
         {
         }
@@ -46,12 +46,12 @@ namespace T_Rex
         {
             get
             {
-                return Properties.Resources.Profile;
+                return Properties.Resources.PolylineProfile;
             }
         }
         public override Guid ComponentGuid
         {
-            get { return new Guid("67613946-8903-4845-aa5b-92c3e908f530"); }
+            get { return new Guid("9bb0b854-4319-43aa-88b8-5c4250ff0a37"); }
         }
     }
 }
