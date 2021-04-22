@@ -9,6 +9,7 @@ using Xbim.Ifc4.GeometricConstraintResource;
 using Xbim.Ifc4.GeometryResource;
 using Xbim.Ifc4.Interfaces;
 using Xbim.Ifc4.Kernel;
+using Xbim.Ifc4.MeasureResource;
 using Xbim.Ifc4.ProductExtension;
 using Xbim.Ifc4.StructuralElementsDomain;
 using Xbim.IO;
@@ -17,9 +18,9 @@ namespace T_RexEngine
 {
     public class Ifc
     {
-        public Ifc(List<ElementGroup> elementGroups, string projectName, string buildingName, string path)
+        public Ifc(List<ElementGroup> elementGroups, string projectName, string buildingName, int unitType, string path)
         {
-            using (IfcStore model = CreateAndInitModel(projectName))
+            using (IfcStore model = CreateAndInitModel(projectName, unitType))
             {
                 if (model != null)
                 {
@@ -82,7 +83,7 @@ namespace T_RexEngine
             }
         }
 
-        private static IfcStore CreateAndInitModel(string projectName)
+        private static IfcStore CreateAndInitModel(string projectName, int unitType)
         {
             var credentials = new XbimEditorCredentials
             {
@@ -102,6 +103,37 @@ namespace T_RexEngine
                 IfcProject project = model.Instances.New<IfcProject>();
                 project.Initialize(ProjectUnits.SIUnitsUK);
                 project.Name = projectName;
+
+                switch (unitType)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                    {
+                        var lengthUnits = project.UnitsInContext.Units.OfType<IfcSIUnit>().Where(u => u.UnitType == IfcUnitEnum.LENGTHUNIT);
+                        foreach (var unit in lengthUnits)
+                        {
+                            unit.Prefix = IfcSIPrefix.CENTI;
+                            unit.Name = IfcSIUnitName.METRE;
+                        }
+
+                        break;
+                    }
+                    case 2:
+                    {
+                        var lengthUnits = project.UnitsInContext.Units.OfType<IfcSIUnit>().Where(u => u.UnitType == IfcUnitEnum.LENGTHUNIT);
+                        foreach (var unit in lengthUnits)
+                        {
+                            unit.Prefix = null;
+                            unit.Name = IfcSIUnitName.METRE;
+                        }
+
+                        break;
+                    }
+                    default:
+                        throw new ArgumentException("Unit type not recognized");
+                }
+
                 transaction.Commit();
             }
 

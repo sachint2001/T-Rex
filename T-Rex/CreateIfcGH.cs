@@ -22,6 +22,8 @@ namespace T_Rex
                 GH_ParamAccess.item);
             pManager.AddTextParameter("Building Name", "Building Name", "Name of the building",
                 GH_ParamAccess.item);
+            pManager.AddIntegerParameter("Unit", "Unit", "Unit for geometry export. 0 = millimeters, 1 = centimeters, 2 = meters",
+                GH_ParamAccess.item);
             pManager.AddTextParameter("Path", "Path", "Path where the IFC file will be saved, should end up with .ifc",
                 GH_ParamAccess.item);
         }
@@ -34,14 +36,16 @@ namespace T_Rex
             List<ElementGroup> elementGroups = new List<ElementGroup>();
             string projectName = string.Empty;
             string buildingName = string.Empty;
+            int unitType = 0;
             string path = string.Empty;
 
             DA.GetDataList(0, elementGroups);
             DA.GetData(1, ref projectName);
             DA.GetData(2, ref buildingName);
-            DA.GetData(3, ref path);
+            DA.GetData(3, ref unitType);
+            DA.GetData(4, ref path);
             
-            Ifc Ifc = new Ifc(elementGroups, projectName, buildingName, path);
+            Ifc Ifc = new Ifc(elementGroups, projectName, buildingName, unitType, path);
         }
         protected override System.Drawing.Bitmap Icon
         {
